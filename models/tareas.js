@@ -12,6 +12,12 @@ class Tareas {
       name: "newTaskDesc",
       type: "input",
       message: "Escriba la descripción de su tarea: ",
+      validate(val) {
+        if (val.length === 0) {
+          return "Por favor, ingrese un valor";
+        }
+        return true;
+      },
     });
 
     const task = new Tarea({ desc: desc.newTaskDesc });
