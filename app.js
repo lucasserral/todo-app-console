@@ -31,6 +31,10 @@ const main = async () => {
         console.log(tareas.listPending());
         await pause();
         break;
+      case "5":
+        await tareas.completarTareas();
+        await pause();
+        break;
 
       default:
         break;

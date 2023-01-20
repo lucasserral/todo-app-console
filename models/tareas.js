@@ -72,6 +72,39 @@ class Tareas {
     });
     return str;
   }
+
+  async completarTareas() {
+    const keys = Object.keys(this.#list);
+    const choices = keys.map((key) => ({
+      value: this.#list[key].id,
+      name: this.#list[key].desc,
+      checked: !!this.#list[key].completadoEn,
+    }));
+
+    const tareas = await inquirer.prompt([
+      {
+        message: "Marque las tareas correspondientes",
+        name: "completadas",
+        type: "checkbox",
+        choices: choices,
+      },
+    ]);
+
+    tareas.completadas.forEach((tarea) => {
+      if (!this.#list[tarea].completadoEn) {
+        this.#list[tarea].completadoEn = new Date().toISOString();
+      }
+    });
+
+    let i = 0;
+
+    while (i < keys.length) {
+      if (!tareas.completadas.includes(keys[i])) {
+        this.#list[keys[i]].completadoEn = null;
+      }
+      i++;
+    }
+  }
 }
 
 export default Tareas;
