@@ -1,14 +1,19 @@
 {
-  "name": "tareas",
+  "name": "todo-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A console app to create tasks, complete and keep track of them.",
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "todo",
+    "tasks",
+    "list"
+  ],
+  "author": "lucasser21@gmail.com",
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
