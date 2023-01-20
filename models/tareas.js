@@ -11,6 +11,28 @@ class Tareas {
     this.#list = newData;
   }
 
+  listPending() {
+    const keys = Object.keys(this.#list);
+    let str = "";
+    keys.forEach((key) => {
+      if (!this.#list[key].completadoEn) {
+        str += ` - ${this.#list[key].desc}\n`;
+      }
+    });
+    return str;
+  }
+
+  listCompleted() {
+    const keys = Object.keys(this.#list);
+    let str = "";
+    keys.forEach((key) => {
+      if (!!this.#list[key].completadoEn) {
+        str += ` ${"[✓]".green} ${this.#list[key].desc}\n`;
+      }
+    });
+    return str;
+  }
+
   async addTask() {
     const desc = await inquirer.prompt({
       name: "newTaskDesc",
@@ -39,10 +61,83 @@ class Tareas {
       return JSON.stringify(arr);
     }
     let str = "";
-    keys.forEach((key) => {
-      str += ` - ${this.#list[key].desc}\n`;
+    keys.forEach((key, i) => {
+      if (!!this.#list[key].completadoEn) {
+        str += `${i + 1}. ${"[✓]".green} ${this.#list[key].desc} - ${
+          "completada".green
+        }\n`;
+      } else {
+        str += `${i + 1}. [ ] ${this.#list[key].desc} - ${"pendiente".red}\n`;
+      }
     });
     return str;
+  }
+
+  async completarTareas() {
+    const keys = Object.keys(this.#list);
+    const choices = keys.map((key) => ({
+      value: this.#list[key].id,
+      name: this.#list[key].desc,
+      checked: !!this.#list[key].completadoEn,
+    }));
+
+    const tareas = await inquirer.prompt([
+      {
+        message: "Marque las tareas correspondientes",
+        name: "completadas",
+        type: "checkbox",
+        choices: choices,
+      },
+    ]);
+
+    tareas.completadas.forEach((tarea) => {
+      if (!this.#list[tarea].completadoEn) {
+        this.#list[tarea].completadoEn = new Date().toISOString();
+      }
+    });
+
+    let i = 0;
+
+    while (i < keys.length) {
+      if (!tareas.completadas.includes(keys[i])) {
+        this.#list[keys[i]].completadoEn = null;
+      }
+      i++;
+    }
+  }
+
+  async deleteTasks() {
+    const keys = Object.keys(this.#list);
+    const choices = keys.map((key) => {
+      const complete = !!this.#list[key].completadoEn;
+      return {
+        value: this.#list[key].id,
+        name: `${this.#list[key].desc} - ${
+          complete ? "completado".green : "pendiente".red
+        }`,
+        checked: false,
+      };
+    });
+
+    const tareas = await inquirer.prompt([
+      {
+        type: "checkbox",
+        message: "Seleccione las tareas que desea eliminar.",
+        name: "eliminadas",
+        choices: choices,
+      },
+      {
+        type: "confirm",
+        message: "¿Estás seguro/a de esta acción?",
+        name: "confirmado",
+      },
+    ]);
+
+    if (tareas.eliminadas.length > 0 && tareas.confirmado) {
+      tareas.eliminadas.forEach((tarea) => {
+        delete this.#list[tarea];
+      });
+    }
   }
 }
 

@@ -23,6 +23,22 @@ const main = async () => {
         console.log(tareas.getList());
         await pause();
         break;
+      case "3":
+        console.log(tareas.listCompleted());
+        await pause();
+        break;
+      case "4":
+        console.log(tareas.listPending());
+        await pause();
+        break;
+      case "5":
+        await tareas.completarTareas();
+        await pause();
+        break;
+      case "6":
+        await tareas.deleteTasks();
+        await pause();
+        break;
 
       default:
         break;
