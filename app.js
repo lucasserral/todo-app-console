@@ -35,6 +35,10 @@ const main = async () => {
         await tareas.completarTareas();
         await pause();
         break;
+      case "6":
+        await tareas.deleteTasks();
+        await pause();
+        break;
 
       default:
         break;

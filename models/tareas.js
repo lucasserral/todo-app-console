@@ -105,6 +105,40 @@ class Tareas {
       i++;
     }
   }
+
+  async deleteTasks() {
+    const keys = Object.keys(this.#list);
+    const choices = keys.map((key) => {
+      const complete = !!this.#list[key].completadoEn;
+      return {
+        value: this.#list[key].id,
+        name: `${this.#list[key].desc} - ${
+          complete ? "completado".green : "pendiente".red
+        }`,
+        checked: false,
+      };
+    });
+
+    const tareas = await inquirer.prompt([
+      {
+        type: "checkbox",
+        message: "Seleccione las tareas que desea eliminar.",
+        name: "eliminadas",
+        choices: choices,
+      },
+      {
+        type: "confirm",
+        message: "¿Estás seguro/a de esta acción?",
+        name: "confirmado",
+      },
+    ]);
+
+    if (tareas.eliminadas.length > 0 && tareas.confirmado) {
+      tareas.eliminadas.forEach((tarea) => {
+        delete this.#list[tarea];
+      });
+    }
+  }
 }
 
 export default Tareas;
