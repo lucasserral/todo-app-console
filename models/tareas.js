@@ -11,6 +11,28 @@ class Tareas {
     this.#list = newData;
   }
 
+  listPending() {
+    const keys = Object.keys(this.#list);
+    let str = "";
+    keys.forEach((key) => {
+      if (!this.#list[key].completadoEn) {
+        str += ` - ${this.#list[key].desc}\n`;
+      }
+    });
+    return str;
+  }
+
+  listCompleted() {
+    const keys = Object.keys(this.#list);
+    let str = "";
+    keys.forEach((key) => {
+      if (!!this.#list[key].completadoEn) {
+        str += ` ${"[✓]".green} ${this.#list[key].desc}\n`;
+      }
+    });
+    return str;
+  }
+
   async addTask() {
     const desc = await inquirer.prompt({
       name: "newTaskDesc",
@@ -39,8 +61,14 @@ class Tareas {
       return JSON.stringify(arr);
     }
     let str = "";
-    keys.forEach((key) => {
-      str += ` - ${this.#list[key].desc}\n`;
+    keys.forEach((key, i) => {
+      if (!!this.#list[key].completadoEn) {
+        str += `${i + 1}. ${"[✓]".green} ${this.#list[key].desc} - ${
+          "completada".green
+        }\n`;
+      } else {
+        str += `${i + 1}. [ ] ${this.#list[key].desc} - ${"pendiente".red}\n`;
+      }
     });
     return str;
   }
