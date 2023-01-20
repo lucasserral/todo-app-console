@@ -3,8 +3,12 @@ import Tarea from "./tarea.js";
 
 class Tareas {
   #list;
-  constructor() {
-    this.#list = {};
+  constructor(initialDataArray) {
+    const newData = {};
+    initialDataArray.forEach((element) => {
+      newData[element.id] = element;
+    });
+    this.#list = newData;
   }
 
   async addTask() {
