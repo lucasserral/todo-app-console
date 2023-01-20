@@ -25,8 +25,15 @@ class Tareas {
     this.#list[task.id] = task;
   }
 
-  getList() {
+  getList(config = { type: "string" }) {
     const keys = Object.keys(this.#list);
+    if (config.type === "raw") {
+      const arr = [];
+      keys.forEach((key) => {
+        arr.push(this.#list[key]);
+      });
+      return JSON.stringify(arr);
+    }
     let str = "";
     keys.forEach((key) => {
       str += ` - ${this.#list[key].desc}\n`;
