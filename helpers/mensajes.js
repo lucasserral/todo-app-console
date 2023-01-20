@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import "colors";
-import questions from "../lists/questions";
+import questions from "../lists/questions.js";
 
 const pause = async () => {
   await inquirer.prompt([
